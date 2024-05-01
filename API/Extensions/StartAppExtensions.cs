@@ -1,4 +1,6 @@
-﻿namespace API.Extensions
+﻿using API.Middlewares;
+
+namespace API.Extensions
 {
     public static class StartAppExtensions
     {
@@ -6,6 +8,7 @@
         {
             var app = builder.Build();
 
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
             app.UseAuthentication();
             app.UseAuthorization();

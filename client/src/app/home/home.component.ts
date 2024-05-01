@@ -15,13 +15,14 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsers();
+    console.log(this.registerMode)
   }
 
   getUsers(): void {
     this.http.get<User[]>('https://localhost:5001/api/users').subscribe({
       next: (response) => this.users = response,
       error: (error) => console.log(error),
-      complete: () => console.log('Request has completed'),
+      complete: () => {},
     });
   }
 

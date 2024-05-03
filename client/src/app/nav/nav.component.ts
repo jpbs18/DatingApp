@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../_services/account.service';
-import { LoginModel } from '../interfaces/account/LoginModel';
+import { LoginModel } from '../interfaces/LoginModel';
 import { Observable, map, of } from 'rxjs';
-import { User } from '../interfaces/account/User';
+import { User } from '../interfaces/User';
 import { Router } from '@angular/router';
 
 @Component({

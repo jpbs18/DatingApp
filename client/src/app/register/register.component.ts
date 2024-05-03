@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { RegisterModel } from '../interfaces/account/RegisterModel';
+import { RegisterModel } from '../interfaces/RegisterModel';
 import { AccountService } from '../_services/account.service';
 import { ToastrService } from 'ngx-toastr';
 

@@ -1,5 +1,4 @@
 ﻿using API.DTOs;
-using API.Entities;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -13,12 +12,10 @@ namespace API.Controllers
     public class UsersController : ControllerBase
     {
         public readonly IUserRepository _repository;
-        private readonly IMapper _mapper;
 
         public UsersController(IUserRepository repository, IMapper mapper)
         {
             _repository = repository;
-            _mapper = mapper;
         }
 
         [HttpGet]

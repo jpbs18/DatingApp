@@ -20,13 +20,7 @@ namespace API.Repositories
         }
 
         public async Task<bool> SaveAllAsync() => await _context.SaveChangesAsync() > 0;      
-        public void Update(AppUser user) => _context.Entry(user).State = EntityState.Modified;
-        
-        public async Task<MemberDto> GetMemberByIdAsync(int id) =>
-            await _context.Users
-                .Where(user => user.Id == id)
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .SingleOrDefaultAsync();
+        public void Update(AppUser user) => _context.Entry(user).State = EntityState.Modified; 
         
         public async Task<MemberDto> GetMemberByUserNameAsync(string username) =>
             await _context.Users
@@ -37,7 +31,14 @@ namespace API.Repositories
         public async Task<IEnumerable<MemberDto>> GetMembersAsync() => 
             await _context.Users
                  .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                 .ToListAsync();       
+                 .ToListAsync();
+
+        public async Task<IEnumerable<AppUser>> GetUsersAsync() => await _context.Users.ToListAsync();
+
+        public async Task<AppUser> GetUserByUserNameAsync(string username) =>
+            await _context.Users
+                .Where(user => user.UserName == username)
+                .SingleOrDefaultAsync();
     }
 }
 

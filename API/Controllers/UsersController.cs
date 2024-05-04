@@ -3,6 +3,7 @@ using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -12,10 +13,12 @@ namespace API.Controllers
     public class UsersController : ControllerBase
     {
         public readonly IUserRepository _repository;
+        private readonly IMapper _mapper;
 
         public UsersController(IUserRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -25,18 +28,24 @@ namespace API.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<MemberDto>> GetUserById(int id)
-        {
-            var user = await _repository.GetMemberByIdAsync(id);
-            return Ok(user);
-        }
-
         [HttpGet("username/{username}")]
         public async Task<ActionResult<MemberDto>> GetUserByUserName(string username)
         {
             var user = await _repository.GetMemberByUserNameAsync(username);
             return Ok(user);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateUser(MemberUpdateDto dto)
+        {
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _repository.GetUserByUserNameAsync(username);
+
+            if (user is null) return NotFound();
+
+            _mapper.Map(dto, user);
+
+            return await _repository.SaveAllAsync() ? NoContent() : BadRequest("Failed to update user");
         }
     }
 }

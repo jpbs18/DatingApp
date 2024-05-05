@@ -33,12 +33,15 @@ namespace API.Repositories
                  .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
                  .ToListAsync();
 
-        public async Task<IEnumerable<AppUser>> GetUsersAsync() => await _context.Users.ToListAsync();
+        public async Task<IEnumerable<AppUser>> GetUsersAsync() => 
+            await _context.Users
+                .Include(user => user.Photos)
+                .ToListAsync();
 
         public async Task<AppUser> GetUserByUserNameAsync(string username) =>
             await _context.Users
-                .Where(user => user.UserName == username)
-                .SingleOrDefaultAsync();
+                .Include(user => user.Photos)
+                .SingleOrDefaultAsync(user => user.UserName == username);
     }
 }
 

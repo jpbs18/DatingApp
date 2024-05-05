@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./nav.component.css'],
 })
 export class NavComponent implements OnInit {
+  defaultPhoto: string = "./assets/user.jpg";
   currentUser$: Observable<User | null> = of(null);
   model: LoginModel = {
     username: '',

@@ -1,15 +1,18 @@
 ﻿using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 
 namespace API.Controllers
-{
+{  
     [Authorize]
     [ApiController]
+    [ServiceFilter(typeof(UserActivity))]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
@@ -25,9 +28,19 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+        public async Task<ActionResult<PageList<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
         {
-            var users = await _repository.GetMembersAsync();          
+            var currentUser = await _repository.GetMemberByUserNameAsync(User.GetUsername());
+            userParams.UserName = currentUser.UserName;
+
+            if (string.IsNullOrWhiteSpace(userParams.Gender))
+            {
+                userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+            }
+           
+            var users = await _repository.GetMembersAsync(userParams);
+            Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
+
             return Ok(users);
         }
 
